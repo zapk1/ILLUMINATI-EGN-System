@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html data-filename="pages/CodeGenerator" data-linenumber="34" data-visual-selector-id="pages/CodeGenerator34" lang="en">
+<head data-filename="pages/CodeGenerator" data-linenumber="35" data-visual-selector-id="pages/CodeGenerator35">
+    <meta data-filename="pages/CodeGenerator" data-linenumber="36" data-visual-selector-id="pages/CodeGenerator36" charset="UTF-8">
+    <meta data-filename="pages/CodeGenerator" data-linenumber="37" data-visual-selector-id="pages/CodeGenerator37" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-filename="pages/CodeGenerator" data-linenumber="38" data-visual-selector-id="pages/CodeGenerator38">Illuminati EGN Portal</title>
+    <script data-filename="pages/CodeGenerator" data-linenumber="39" data-visual-selector-id="pages/CodeGenerator39" src="https://cdn.tailwindcss.com"></script>
+    <link data-filename="pages/CodeGenerator" data-linenumber="40" data-visual-selector-id="pages/CodeGenerator40" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script data-filename="pages/CodeGenerator" data-linenumber="41" data-visual-selector-id="pages/CodeGenerator41" src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style data-filename="pages/CodeGenerator" data-linenumber="42" data-visual-selector-id="pages/CodeGenerator42">
+        :root {
+            --illuminati-gold: #FFD700;
+            --illuminati-orange: #FFA500;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .illuminati-gradient { 
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); 
+        }
+        
+        .illuminati-shadow { 
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3); 
+        }
+        
+        .illuminati-button {
+            background: linear-gradient(145deg, #FFD700, #FFA500);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: #000;
+        }
+        
+        .illuminati-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+        }
+        
+        .illuminati-logo {
+            width: 48px; 
+            height: 48px;
+            background-image: url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/72d629e9a_IlluminatiEyewithSouthAfricanFlag.png');
+            background-size: contain; 
+            background-repeat: no-repeat; 
+            background-position: center;
+            background-color: white; 
+            border-radius: 8px; 
+            padding: 4px;
+        }
+        
+        .page { 
+            display: none; 
+            min-height: 100vh;
+            width: 100%;
+        }
+        .page.active { 
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+        
+        .sidebar {
+            width: 280px;
+            min-height: 100vh;
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(55, 65, 81, 0.8);
+            position: fixed;
+            left: -280px;
+            top: 0;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .sidebar.open { 
+            left: 0; 
+        }
+        
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            display: block;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 0;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+        
+        @media (min-width: 768px) {
+            .sidebar { 
+                position: relative; 
+                left: 0; 
+            }
+            .sidebar-toggle { 
+                display: none; 
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        
+        .theme-transition { 
+            transition: all 0.3s ease; 
+        }
+        
+        .dark { 
+            background: linear-gradient(135deg, #111827 0%, #000000 50%, #111827 100%); 
+            color: white; 
+        }
+        
+        .light { 
+            background: linear-gradient(135deg, #f9fafb 0%, #ffffff 50%, #f9fafb 100%); 
+            color: black; 
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .modal.show { 
+            display: flex; 
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .form-group { 
+            margin-bottom: 1rem; 
+        }
+        
+        .form-group label { 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            font-weight: 600; 
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .member-card {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            border: 1px solid #374151;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .member-card:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); 
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-success { 
+            background: #d1fae5; 
+            color: #065f46; 
+        }
+        .badge-warning { 
+            background: #fef3c7; 
+            color: #92400e; 
+        }
+        .badge-danger { 
+            background: #fecaca; 
+            color: #991b1b; 
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-card {
+            background: rgba(31, 41, 55, 0.8);
+            border: 1px solid rgba(55, 65, 81, 0.8);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .content-section {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .nav-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #d1d5db;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: rgba(55, 65, 81, 0.8);
+            color: #fbbf24;
+        }
+        
+        .threshold-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .receipt-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .id-card {
+            background: #d1d5db;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body data-filename="pages/CodeGenerator" data-linenumber="323" data-visual-selector-id="pages/CodeGenerator323" class="dark theme-transition">
+    <!-- Sidebar Toggle -->
+    <button data-filename="pages/CodeGenerator" data-linenumber="325" data-visual-selector-id="pages/CodeGenerator325" class="sidebar-toggle illuminati-button" onclick="toggleSidebar()">
+        <i data-filename="pages/CodeGenerator" data-linenumber="326" data-visual-selector-id="pages/CodeGenerator326" class="fas fa-bars"></i>
+    </button>
+    
+    <!-- App Container -->
+    <div data-filename="pages/CodeGenerator" data-linenumber="330" data-visual-selector-id="pages/CodeGenerator330" class="app-container">
+        <!-- Sidebar -->
+        <div data-filename="pages/CodeGenerator" data-linenumber="332" data-visual-selector-id="pages/CodeGenerator332" class="sidebar" id="sidebar">
+            <div data-filename="pages/CodeGenerator" data-linenumber="333" data-visual-selector-id="pages/CodeGenerator333" class="p-6 border-b border-gray-800">
+                <div data-filename="pages/CodeGenerator" data-linenumber="334" data-visual-selector-id="pages/CodeGenerator334" class="flex items-center gap-3">
+                    <div data-filename="pages/CodeGenerator" data-linenumber="335" data-visual-selector-id="pages/CodeGenerator335" class="illuminati-logo"></div>
+                    <div data-filename="pages/CodeGenerator" data-linenumber="336" data-visual-selector-id="pages/CodeGenerator336">
+                        <h2 data-filename="pages/CodeGenerator" data-linenumber="337" data-visual-selector-id="pages/CodeGenerator337" class="font-bold text-lg text-white">ILLUMINATI</h2>
+                        <p data-filename="pages/CodeGenerator" data-linenumber="338" data-visual-selector-id="pages/CodeGenerator338" class="text-xs text-yellow-400">EGN PORTAL</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div data-filename="pages/CodeGenerator" data-linenumber="343" data-visual-selector-id="pages/CodeGenerator343" class="p-4">
+                <nav data-filename="pages/CodeGenerator" data-linenumber="344" data-visual-selector-id="pages/CodeGenerator344" class="space-y-1">
+                    <a data-filename="pages/CodeGenerator" data-linenumber="345" data-visual-selector-id="pages/CodeGenerator345" href="#" onclick="showPage('home')" class="nav-link active">
+                        <i data-filename="pages/CodeGenerator" data-linenumber="346" data-visual-selector-id="pages/CodeGenerator346" class="fas fa-users mr-3"></i>Registration System
+                    </a>
+                    <a data-filename="pages/CodeGenerator" data-linenumber="348" data-visual-selector-id="pages/CodeGenerator348" href="#" onclick="showPage('threshold')" class="nav-link">
+                        <i data-filename="pages/CodeGenerator" data-linenumber="349" data-visual-selector-id="pages/CodeGenerator349" class="fas fa-dollar-sign mr-3"></i>Joining Threshold
+                    </a>
+                    <a data-filename="pages/CodeGenerator" data-linenumber="351" data-visual-selector-id="pages/CodeGenerator351" href="#" onclick="showPage('receipt')" class="nav-link">
+                        <i data-filename="pages/CodeGenerator" data-linenumber="352" data-visual-selector-id="pages/CodeGenerator352" class="fas fa-receipt mr-3"></i>Payment Receipt
+                    </a>
+                    <a data-filename="pages/CodeGenerator" data-linenumber="354" data-visual-selector-id="pages/CodeGenerator354" href="#" onclick="showPage('idcard')" class="nav-link">
+                        <i data-filename="pages/CodeGenerator" data-linenumber="355" data-visual-selector-id="pages/CodeGenerator355" class="fas fa-id-card mr-3"></i>ID Card Generator
+                    </a>
+                    <a data-filename="pages/CodeGenerator" data-linenumber="357" data-visual-selector-id="pages/CodeGenerator357" href="#" onclick="showPage('payment')" class="nav-link">
+                        <i data-filename="pages/CodeGenerator" data-linenumber="358" data-visual-selector-id="pages/CodeGenerator358" class="fas fa-crown mr-3"></i>Payment Installation
+                    </a>
+                </nav>
+                
+                <div data-filename="pages/CodeGenerator" data-linenumber="362" data-visual-selector-id="pages/CodeGenerator362" class="mt-8 p-4 bg-gray-800 rounded-lg">
+                    <div data-filename="pages/CodeGenerator" data-linenumber="363" data-visual-selector-id="pages/CodeGenerator363" class="flex items-center justify-between mb-4">
+                        <span data-filename="pages/CodeGenerator" data-linenumber="364" data-visual-selector-id="pages/CodeGenerator364" class="text-gray-300">Dark Mode</span>
+                        <button data-filename="pages/CodeGenerator" data-linenumber="365" data-visual-selector-id="pages/CodeGenerator365" onclick="toggleTheme()" class="illuminati-button px-3 py-1 text-sm">
+                            <i data-filename="pages/CodeGenerator" data-linenumber="366" data-visual-selector-id="pages/CodeGenerator366" class="fas fa-sun"></i>
+                        </button>
+                    </div>
+                    
+                    <div data-filename="pages/CodeGenerator" data-linenumber="370" data-visual-selector-id="pages/CodeGenerator370" id="admin-section">
+                        <button data-filename="pages/CodeGenerator" data-linenumber="371" data-visual-selector-id="pages/CodeGenerator371" onclick="showAdminLogin()" class="illuminati-button w-full">
+                            <i data-filename="pages/CodeGenerator" data-linenumber="372" data-visual-selector-id="pages/CodeGenerator372" class="fas fa-lock mr-2"></i>Admin Access
+                        </button>
+                    </div>
+                    
+                    <div data-filename="pages/CodeGenerator" data-linenumber="376" data-visual-selector-id="pages/CodeGenerator376" id="admin-controls" style="display: none;">
+                        <div data-filename="pages/CodeGenerator" data-linenumber="377" data-visual-selector-id="pages/CodeGenerator377" class="text-green-400 text-sm mb-2">
+                            <i data-filename="pages/CodeGenerator" data-linenumber="378" data-visual-selector-id="pages/CodeGenerator378" class="fas fa-check mr-2"></i>Admin Mode Active
+                        </div>
+                        <button data-filename="pages/CodeGenerator" data-linenumber="380" data-visual-selector-id="pages/CodeGenerator380" onclick="logoutAdmin()" class="w-full px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div data-filename="pages/CodeGenerator" data-linenumber="389" data-visual-selector-id="pages/CodeGenerator389" class="main-content">
+            <!-- Home Page -->
+            <div data-filename="pages/CodeGenerator" data-linenumber="391" data-visual-selector-id="pages/CodeGenerator391" id="home-page" class="page active">
+                <div data-filename="pages/CodeGenerator" data-linenumber="392" data-visual-selector-id="pages/CodeGenerator392" class="content-section">
+                    <div data-filename="pages/CodeGenerator" data-linenumber="393" data-visual-selector-id="pages/CodeGenerator393" class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                        <div data-filename="pages/CodeGenerator" data-linenumber="394" data-visual-selector-id="pages/CodeGenerator394" class="text-center md:text-left">
+                            <img data-filename="pages/CodeGenerator" data-linenumber="395" data-visual-selector-id="pages/CodeGenerator395" src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/72d629e9a_IlluminatiEyewithSouthAfricanFlag.png" alt="Logo" class="h-16 w-auto bg-white p-1 rounded-md mx-auto md:mx-0">
+                        </div>
+                        <button data-filename="pages/CodeGenerator" data-linenumber="397" data-visual-selector-id="pages/CodeGenerator397" onclick="showAddMemberForm()" class="illuminati-button" id="add-member-btn" style="display: none;">
+                            <i data-filename="pages/CodeGenerator" data-linenumber="398" data-visual-selector-id="pages/CodeGenerator398" class="fas fa-plus mr-2"></i>Add New Member
+                        </button>
+                    </div>
+                    
+                    <div data-filename="pages/CodeGenerator" data-linenumber="402" data-visual-selector-id="pages/CodeGenerator402" class="stats-grid">
+                        <div data-filename="pages/CodeGenerator" data-linenumber="403" data-visual-selector-id="pages/CodeGenerator403" class="stats-card">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="404" data-visual-selector-id="pages/CodeGenerator404" class="flex justify-between items-center">
+                                <div data-filename="pages/CodeGenerator" data-linenumber="405" data-visual-selector-id="pages/CodeGenerator405">
+                                    <p data-filename="pages/CodeGenerator" data-linenumber="406" data-visual-selector-id="pages/CodeGenerator406" class="text-gray-300">Total Members</p>
+                                    <h3 data-filename="pages/CodeGenerator" data-linenumber="407" data-visual-selector-id="pages/CodeGenerator407" class="text-3xl font-bold text-white mt-2" id="total-members">0</h3>
+                                </div>
+                                <i data-filename="pages/CodeGenerator" data-linenumber="409" data-visual-selector-id="pages/CodeGenerator409" class="fas fa-users text-yellow-400 text-2xl"></i>
+                            </div>
+                        </div>
+                        <div data-filename="pages/CodeGenerator" data-linenumber="412" data-visual-selector-id="pages/CodeGenerator412" class="stats-card">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="413" data-visual-selector-id="pages/CodeGenerator413" class="flex justify-between items-center">
+                                <div data-filename="pages/CodeGenerator" data-linenumber="414" data-visual-selector-id="pages/CodeGenerator414">
+                                    <p data-filename="pages/CodeGenerator" data-linenumber="415" data-visual-selector-id="pages/CodeGenerator415" class="text-gray-300">Paid Members</p>
+                                    <h3 data-filename="pages/CodeGenerator" data-linenumber="416" data-visual-selector-id="pages/CodeGenerator416" class="text-3xl font-bold text-green-400 mt-2" id="paid-members">0</h3>
+                                </div>
+                                <i data-filename="pages/CodeGenerator" data-linenumber="418" data-visual-selector-id="pages/CodeGenerator418" class="fas fa-crown text-green-400 text-2xl"></i>
+                            </div>
+                        </div>
+                        <div data-filename="pages/CodeGenerator" data-linenumber="421" data-visual-selector-id="pages/CodeGenerator421" class="stats-card">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="422" data-visual-selector-id="pages/CodeGenerator422" class="flex justify-between items-center">
+                                <div data-filename="pages/CodeGenerator" data-linenumber="423" data-visual-selector-id="pages/CodeGenerator423">
+                                    <p data-filename="pages/CodeGenerator" data-linenumber="424" data-visual-selector-id="pages/CodeGenerator424" class="text-gray-300">Pending Payments</p>
+                                    <h3 data-filename="pages/CodeGenerator" data-linenumber="425" data-visual-selector-id="pages/CodeGenerator425" class="text-3xl font-bold text-orange-400 mt-2" id="pending-members">0</h3>
+                                </div>
+                                <i data-filename="pages/CodeGenerator" data-linenumber="427" data-visual-selector-id="pages/CodeGenerator427" class="fas fa-calendar text-orange-400 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div data-filename="pages/CodeGenerator" data-linenumber="432" data-visual-selector-id="pages/CodeGenerator432" class="bg-gray-800 rounded-lg p-6 illuminati-shadow">
+                        <div data-filename="pages/CodeGenerator" data-linenumber="433" data-visual-selector-id="pages/CodeGenerator433" class="flex justify-between items-center mb-6">
+                            <h2 data-filename="pages/CodeGenerator" data-linenumber="434" data-visual-selector-id="pages/CodeGenerator434" class="text-xl font-bold text-white">Registered Members</h2>
+                            <input data-filename="pages/CodeGenerator" data-linenumber="435" data-visual-selector-id="pages/CodeGenerator435" type="text" placeholder="Search members..." class="px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600" onkeyup="searchMembers(this.value)">
+                        </div>
+                        <div data-filename="pages/CodeGenerator" data-linenumber="437" data-visual-selector-id="pages/CodeGenerator437" id="members-container" class="members-grid">
+                            <!-- Members will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Joining Threshold Page -->
+            <div data-filename="pages/CodeGenerator" data-linenumber="445" data-visual-selector-id="pages/CodeGenerator445" id="threshold-page" class="page">
+                <div data-filename="pages/CodeGenerator" data-linenumber="446" data-visual-selector-id="pages/CodeGenerator446" class="content-section">
+                    <div data-filename="pages/CodeGenerator" data-linenumber="447" data-visual-selector-id="pages/CodeGenerator447" class="text-center mb-8">
+                        <h1 data-filename="pages/CodeGenerator" data-linenumber="448" data-visual-selector-id="pages/CodeGenerator448" class="text-4xl font-bold text-white mb-2 flex items-center justify-center gap-3">
+                            <i data-filename="pages/CodeGenerator" data-linenumber="449" data-visual-selector-id="pages/CodeGenerator449" class="fas fa-dollar-sign text-yellow-400"></i>
+                            JOINING THRESHOLD
+                        </h1>
+                        <p data-filename="pages/CodeGenerator" data-linenumber="452" data-visual-selector-id="pages/CodeGenerator452" class="text-gray-300">Elite Global Network Requirements</p>
+                        <div data-filename="pages/CodeGenerator" data-linenumber="453" data-visual-selector-id="pages/CodeGenerator453" class="flex gap-4 justify-center mt-4">
+                            <button data-filename="pages/CodeGenerator" data-linenumber="454" data-visual-selector-id="pages/CodeGenerator454" onclick="toggleEditMode()" class="border-2 border-yellow-400 text-yellow-400 px-4 py-2 rounded-lg hover:bg-yellow-400 hover:text-black transition-colors" id="edit-threshold-btn" style="display: none;">
+                                <i data-filename="pages/CodeGenerator" data-linenumber="455" data-visual-selector-id="pages/CodeGenerator455" class="fas fa-edit mr-2"></i>Edit
+                            </button>
+                            <button data-filename="pages/CodeGenerator" data-linenumber="457" data-visual-selector-id="pages/CodeGenerator457" onclick="downloadThresholdImage()" class="illuminati-button">
+                                <i data-filename="pages/CodeGenerator" data-linenumber="458" data-visual-selector-id="pages/CodeGenerator458" class="fas fa-download mr-2"></i>Download
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div data-filename="pages/CodeGenerator" data-linenumber="463" data-visual-selector-id="pages/CodeGenerator463" id="threshold-card" class="threshold-card">
+                        <div data-filename="pages/CodeGenerator" data-linenumber="464" data-visual-selector-id="pages/CodeGenerator464" class="text-center mb-6">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="465" data-visual-selector-id="pages/CodeGenerator465" class="w-24 h-24 bg-white rounded-lg p-2 mx-auto mb-4 illuminati-shadow">
+                                <img data-filename="pages/CodeGenerator" data-linenumber="466" data-visual-selector-id="pages/CodeGenerator466" src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/72d629e9a_IlluminatiEyewithSouthAfricanFlag.png" alt="Logo" class="w-full h-full object-contain">
+                            </div>
+                            
+                            <div data-filename="pages/CodeGenerator" data-linenumber="469" data-visual-selector-id="pages/CodeGenerator469" class="space-y-2">
+                                <div data-filename="pages/CodeGenerator" data-linenumber="470" data-visual-selector-id="pages/CodeGenerator470" class="bg-yellow-400 px-8 py-3 rounded-lg">
+                                    <h2 data-filename="pages/CodeGenerator" data-linenumber="471" data-visual-selector-id="pages/CodeGenerator471" class="text-2xl font-bold text-black">ILLUMINATI</h2>
+                                </div>
+                                <div data-filename="pages/CodeGenerator" data-linenumber="473" data-visual-selector-id="pages/CodeGenerator473" class="bg-yellow-400 px-8 py-3 rounded-lg">
+                                    <h3 data-filename="pages/CodeGenerator" data-linenumber="474" data-visual-selector-id="pages/CodeGenerator474" class="text-xl font-bold text-black">ELITE GLOBAL NETWORK</h3>
+                                </div>
+                                <div data-filename="pages/CodeGenerator" data-linenumber="476" data-visual-selector-id="pages/CodeGenerator476" class="bg-yellow-400 px-8 py-3 rounded-lg">
+                                    <h4 data-filename="pages/CodeGenerator" data-linenumber="477" data-visual-selector-id="pages/CodeGenerator477" class="text-lg font-bold text-black">JOINING REQUIREMENTS</h4>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div data-filename="pages/CodeGenerator" data-linenumber="482" data-visual-selector-id="pages/CodeGenerator482" class="text-center mb-8">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="483" data-visual-selector-id="pages/CodeGenerator483" class="flex justify-center items-center gap-4 mb-4">
+                                <div data-filename="pages/CodeGenerator" data-linenumber="484" data-visual-selector-id="pages/CodeGenerator484" class="w-32 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center">
+                                    <span data-filename="pages/CodeGenerator" data-linenumber="485" data-visual-selector-id="pages/CodeGenerator485" class="text-white text-sm font-bold">SA ID</span>
+                                </div>
+                                <span data-filename="pages/CodeGenerator" data-linenumber="487" data-visual-selector-id="pages/CodeGenerator487" class="text-4xl font-bold">OR</span>
+                                <div data-filename="pages/CodeGenerator" data-linenumber="488" data-visual-selector-id="pages/CodeGenerator488" class="w-32 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center">
+                                    <span data-filename="pages/CodeGenerator" data-linenumber="489" data-visual-selector-id="pages/CodeGenerator489" class="text-white text-sm font-bold">PASSPORT</span>
+                                </div>
+                            </div>
+                            <div data-filename="pages/CodeGenerator" data-linenumber="492" data-visual-selector-id="pages/CodeGenerator492" class="bg-yellow-400 px-6 py-2 rounded-lg">
+                                <span data-filename="pages/CodeGenerator" data-linenumber="493" data-visual-selector-id="pages/CodeGenerator493" class="text-black font-bold">SA ID CARD PICTURE FRONT AND BACK</span>
+                            </div>
+                        </div>
+                        
+                        <div data-filename="pages/CodeGenerator" data-linenumber="497" data-visual-selector-id="pages/CodeGenerator497" class="text-center mb-8">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="498" data-visual-selector-id="pages/CodeGenerator498" class="bg-gradient-to-br from-red-100 to-orange-100 p-4 rounded-2xl">
+                                <div data-filename="pages/CodeGenerator" data-linenumber="499" data-visual-selector-id="pages/CodeGenerator499" class="w-48 h-32 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center">
+                                    <span data-filename="pages/CodeGenerator" data-linenumber="500" data-visual-selector-id="pages/CodeGenerator500" class="text-white text-2xl font-bold">R200</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div data-filename="pages/CodeGenerator" data-linenumber="505" data-visual-selector-id="pages/CodeGenerator505" class="text-center mb-8">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="506" data-visual-selector-id="pages/CodeGenerator506" class="bg-yellow-400 px-8 py-4 rounded-lg">
+                                <span data-filename="pages/CodeGenerator" data-linenumber="507" data-visual-selector-id="pages/CodeGenerator507" class="text-black font-bold text-2xl" id="joining-fee-display">R1000 JOINING FEE</span>
+                            </div>
+                        </div>
+                        
+                        <div data-filename="pages/CodeGenerator" data-linenumber="511" data-visual-selector-id="pages/CodeGenerator511" class="text-center">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="512" data-visual-selector-id="pages/CodeGenerator512" class="bg-yellow-400 px-8 py-3 rounded-lg">
+                                <div data-filename="pages/CodeGenerator" data-linenumber="513" data-visual-selector-id="pages/CodeGenerator513" class="flex items-center justify-center gap-2">
+                                    <i data-filename="pages/CodeGenerator" data-linenumber="514" data-visual-selector-id="pages/CodeGenerator514" class="fas fa-comments text-black"></i>
+                                    <span data-filename="pages/CodeGenerator" data-linenumber="515" data-visual-selector-id="pages/CodeGenerator515" class="text-black font-bold" id="whatsapp-display">WHATSAPP 063 914 5113</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Receipt Page -->
+            <div data-filename="pages/CodeGenerator" data-linenumber="524" data-visual-selector-id="pages/CodeGenerator524" id="receipt-page" class="page">
+                <div data-filename="pages/CodeGenerator" data-linenumber="525" data-visual-selector-id="pages/CodeGenerator525" class="content-section">
+                    <div data-filename="pages/CodeGenerator" data-linenumber="526" data-visual-selector-id="pages/CodeGenerator526" class="text-center mb-8">
+                        <h1 data-filename="pages/CodeGenerator" data-linenumber="527" data-visual-selector-id="pages/CodeGenerator527" class="text-4xl font-bold text-white mb-2 flex items-center justify-center gap-3">
+                            <i data-filename="pages/CodeGenerator" data-linenumber="528" data-visual-selector-id="pages/CodeGenerator528" class="fas fa-receipt text-yellow-400"></i>
+                            PAYMENT RECEIPT
+                        </h1>
+                        <p data-filename="pages/CodeGenerator" data-linenumber="531" data-visual-selector-id="pages/CodeGenerator531" class="text-gray-300">Illuminati Payment Acceptance Receipt</p>
+                        <button data-filename="pages/CodeGenerator" data-linenumber="532" data-visual-selector-id="pages/CodeGenerator532" onclick="downloadReceiptImage()" class="illuminati-button mt-4">
+                            <i data-filename="pages/CodeGenerator" data-linenumber="533" data-visual-selector-id="pages/CodeGenerator533" class="fas fa-download mr-2"></i>Download
+                        </button>
+                    </div>
+                    
+                    <div data-filename="pages/CodeGenerator" data-linenumber="537" data-visual-selector-id="pages/CodeGenerator537" id="receipt-card" class="receipt-card">
+                        <!-- Receipt content will be generated dynamically -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ID Card Page -->
+            <div data-filename="pages/CodeGenerator" data-linenumber="544" data-visual-selector-id="pages/CodeGenerator544" id="idcard-page" class="page">
+                <div data-filename="pages/CodeGenerator" data-linenumber="545" data-visual-selector-id="pages/CodeGenerator545" class="content-section">
+                    <div data-filename="pages/CodeGenerator" data-linenumber="546" data-visual-selector-id="pages/CodeGenerator546" class="text-center mb-8">
+                        <h1 data-filename="pages/CodeGenerator" data-linenumber="547" data-visual-selector-id="pages/CodeGenerator547" class="text-4xl font-bold text-white mb-2 flex items-center justify-center gap-3">
+                            <i data-filename="pages/CodeGenerator" data-linenumber="548" data-visual-selector-id="pages/CodeGenerator548" class="fas fa-id-card text-yellow-400"></i>
+                            ID CARD GENERATOR
+                        </h1>
+                        <p data-filename="pages/CodeGenerator" data-linenumber="551" data-visual-selector-id="pages/CodeGenerator551" class="text-gray-300">Elite Global Network Member Card</p>
+                        <button data-filename="pages/CodeGenerator" data-linenumber="552" data-visual-selector-id="pages/CodeGenerator552" onclick="downloadIdCard()" class="illuminati-button mt-4">
+                            <i data-filename="pages/CodeGenerator" data-linenumber="553" data-visual-selector-id="pages/CodeGenerator553" class="fas fa-download mr-2"></i>Download
+                        </button>
+                    </div>
+                    
+                    <div data-filename="pages/CodeGenerator" data-linenumber="557" data-visual-selector-id="pages/CodeGenerator557" class="flex justify-center">
+                        <div data-filename="pages/CodeGenerator" data-linenumber="558" data-visual-selector-id="pages/CodeGenerator558" id="id-card" class="id-card">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="559" data-visual-selector-id="pages/CodeGenerator559" class="flex items-center gap-4 mb-6">
+                                <div data-filename="pages/CodeGenerator" data-linenumber="560" data-visual-selector-id="pages/CodeGenerator560" class="w-12 h-12 bg-white rounded-lg p-1">
+                                    <img data-filename="pages/CodeGenerator" data-linenumber="561" data-visual-selector-id="pages/CodeGenerator561" src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/72d629e9a_IlluminatiEyewithSouthAfricanFlag.png" alt="Logo" class="w-full h-full object-contain">
+                                </div>
+                                <div data-filename="pages/CodeGenerator" data-linenumber="563" data-visual-selector-id="pages/CodeGenerator563">
+                                    <h2 data-filename="pages/CodeGenerator" data-linenumber="564" data-visual-selector-id="pages/CodeGenerator564" class="text-xl font-bold text-black">ILLUMINATI</h2>
+                                    <p data-filename="pages/CodeGenerator" data-linenumber="565" data-visual-selector-id="pages/CodeGenerator565" class="text-sm font-semibold text-gray-700">ELITE GLOBAL NETWORK</p>
+                                </div>
+                            </div>
+                            
+                            <div data-filename="pages/CodeGenerator" data-linenumber="569" data-visual-selector-id="pages/CodeGenerator569" class="mb-4">
+                                <p data-filename="pages/CodeGenerator" data-linenumber="570" data-visual-selector-id="pages/CodeGenerator570" class="text-lg font-bold text-black mb-1">Name</p>
+                                <div data-filename="pages/CodeGenerator" data-linenumber="571" data-visual-selector-id="pages/CodeGenerator571" class="border-b-2 border-black pb-1">
+                                    <p data-filename="pages/CodeGenerator" data-linenumber="572" data-visual-selector-id="pages/CodeGenerator572" class="text-lg text-black" id="id-name">Enter Member Name</p>
+                                </div>
+                            </div>
+                            
+                            <div data-filename="pages/CodeGenerator" data-linenumber="576" data-visual-selector-id="pages/CodeGenerator576">
+                                <p data-filename="pages/CodeGenerator" data-linenumber="577" data-visual-selector-id="pages/CodeGenerator577" class="text-lg font-bold text-black mb-1">Illuminati Position</p>
+                                <div data-filename="pages/CodeGenerator" data-linenumber="578" data-visual-selector-id="pages/CodeGenerator578" class="border-b-2 border-black pb-1">
+                                    <p data-filename="pages/CodeGenerator" data-linenumber="579" data-visual-selector-id="pages/CodeGenerator579" class="text-lg text-black" id="id-position">Enter Position</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Installation Page -->
+            <div data-filename="pages/CodeGenerator" data-linenumber="588" data-visual-selector-id="pages/CodeGenerator588" id="payment-page" class="page">
+                <div data-filename="pages/CodeGenerator" data-linenumber="589" data-visual-selector-id="pages/CodeGenerator589" class="content-section">
+                    <div data-filename="pages/CodeGenerator" data-linenumber="590" data-visual-selector-id="pages/CodeGenerator590" class="text-center mb-8">
+                        <h1 data-filename="pages/CodeGenerator" data-linenumber="591" data-visual-selector-id="pages/CodeGenerator591" class="text-4xl font-bold text-white mb-2 flex items-center justify-center gap-3">
+                            <i data-filename="pages/CodeGenerator" data-linenumber="592" data-visual-selector-id="pages/CodeGenerator592" class="fas fa-crown text-yellow-400"></i>
+                            PAYMENT INSTALLATION
+                        </h1>
+                        <p data-filename="pages/CodeGenerator" data-linenumber="595" data-visual-selector-id="pages/CodeGenerator595" class="text-gray-300">Elite Payment Processing System</p>
+                    </div>
+                    
+                    <div data-filename="pages/CodeGenerator" data-linenumber="598" data-visual-selector-id="pages/CodeGenerator598" class="grid md:grid-cols-2 gap-8 mb-8">
+                        <div data-filename="pages/CodeGenerator" data-linenumber="599" data-visual-selector-id="pages/CodeGenerator599" class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg p-6 text-center illuminati-shadow">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="600" data-visual-selector-id="pages/CodeGenerator600" class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span data-filename="pages/CodeGenerator" data-linenumber="601" data-visual-selector-id="pages/CodeGenerator601" class="text-blue-600 font-bold">PEP</span>
+                            </div>
+                            <h3 data-filename="pages/CodeGenerator" data-linenumber="603" data-visual-selector-id="pages/CodeGenerator603" class="text-white text-xl font-bold mb-2">PEP STORE</h3>
+                            <p data-filename="pages/CodeGenerator" data-linenumber="604" data-visual-selector-id="pages/CodeGenerator604" class="text-blue-100">Secure Payment Processing</p>
+                        </div>
+                        
+                        <div data-filename="pages/CodeGenerator" data-linenumber="607" data-visual-selector-id="pages/CodeGenerator607" class="bg-gradient-to-br from-red-600 to-red-800 rounded-lg p-6 text-center illuminati-shadow">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="608" data-visual-selector-id="pages/CodeGenerator608" class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span data-filename="pages/CodeGenerator" data-linenumber="609" data-visual-selector-id="pages/CodeGenerator609" class="text-red-600 font-bold">CAP</span>
+                            </div>
+                            <h3 data-filename="pages/CodeGenerator" data-linenumber="611" data-visual-selector-id="pages/CodeGenerator611" class="text-white text-xl font-bold mb-2">CAPITEC</h3>
+                            <p data-filename="pages/CodeGenerator" data-linenumber="612" data-visual-selector-id="pages/CodeGenerator612" class="text-red-100">Banking Solutions</p>
+                        </div>
+                    </div>
+                    
+                    <div data-filename="pages/CodeGenerator" data-linenumber="616" data-visual-selector-id="pages/CodeGenerator616" class="bg-gray-800 rounded-lg p-8 illuminati-shadow">
+                        <h3 data-filename="pages/CodeGenerator" data-linenumber="617" data-visual-selector-id="pages/CodeGenerator617" class="text-xl font-bold text-white mb-6 text-center">Payment Processing</h3>
+                        <form data-filename="pages/CodeGenerator" data-linenumber="618" data-visual-selector-id="pages/CodeGenerator618" id="payment-form" class="grid md:grid-cols-2 gap-6">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="619" data-visual-selector-id="pages/CodeGenerator619" class="form-group">
+                                <label data-filename="pages/CodeGenerator" data-linenumber="620" data-visual-selector-id="pages/CodeGenerator620" class="text-gray-300">Payer Name</label>
+                                <input data-filename="pages/CodeGenerator" data-linenumber="621" data-visual-selector-id="pages/CodeGenerator621" type="text" name="payerName" required>
+                            </div>
+                            <div data-filename="pages/CodeGenerator" data-linenumber="623" data-visual-selector-id="pages/CodeGenerator623" class="form-group">
+                                <label data-filename="pages/CodeGenerator" data-linenumber="624" data-visual-selector-id="pages/CodeGenerator624" class="text-gray-300">Phone Number</label>
+                                <input data-filename="pages/CodeGenerator" data-linenumber="625" data-visual-selector-id="pages/CodeGenerator625" type="tel" name="payerNumber" required>
+                            </div>
+                            <div data-filename="pages/CodeGenerator" data-linenumber="627" data-visual-selector-id="pages/CodeGenerator627" class="form-group">
+                                <label data-filename="pages/CodeGenerator" data-linenumber="628" data-visual-selector-id="pages/CodeGenerator628" class="text-gray-300">Payment Method</label>
+                                <select data-filename="pages/CodeGenerator" data-linenumber="629" data-visual-selector-id="pages/CodeGenerator629" name="paymentMethod" required>
+                                    <option data-filename="pages/CodeGenerator" data-linenumber="630" data-visual-selector-id="pages/CodeGenerator630" value="">Select method</option>
+                                    <option data-filename="pages/CodeGenerator" data-linenumber="631" data-visual-selector-id="pages/CodeGenerator631" value="pep">PEP Store</option>
+                                    <option data-filename="pages/CodeGenerator" data-linenumber="632" data-visual-selector-id="pages/CodeGenerator632" value="capitec">Capitec Bank</option>
+                                </select>
+                            </div>
+                            <div data-filename="pages/CodeGenerator" data-linenumber="635" data-visual-selector-id="pages/CodeGenerator635" class="form-group">
+                                <label data-filename="pages/CodeGenerator" data-linenumber="636" data-visual-selector-id="pages/CodeGenerator636" class="text-gray-300">Withdrawal Number (10 digits)</label>
+                                <input data-filename="pages/CodeGenerator" data-linenumber="637" data-visual-selector-id="pages/CodeGenerator637" type="text" name="withdrawalNumber" maxlength="10" required>
+                            </div>
+                            <div data-filename="pages/CodeGenerator" data-linenumber="639" data-visual-selector-id="pages/CodeGenerator639" class="form-group">
+                                <label data-filename="pages/CodeGenerator" data-linenumber="640" data-visual-selector-id="pages/CodeGenerator640" class="text-gray-300">Withdrawal PIN (4 digits)</label>
+                                <input data-filename="pages/CodeGenerator" data-linenumber="641" data-visual-selector-id="pages/CodeGenerator641" type="password" name="withdrawalPin" maxlength="4" required>
+                            </div>
+                            <div data-filename="pages/CodeGenerator" data-linenumber="643" data-visual-selector-id="pages/CodeGenerator643" class="form-group">
+                                <label data-filename="pages/CodeGenerator" data-linenumber="644" data-visual-selector-id="pages/CodeGenerator644" class="text-gray-300">Amount (R)</label>
+                                <input data-filename="pages/CodeGenerator" data-linenumber="645" data-visual-selector-id="pages/CodeGenerator645" type="number" name="amount" required>
+                            </div>
+                            <div data-filename="pages/CodeGenerator" data-linenumber="647" data-visual-selector-id="pages/CodeGenerator647" class="form-group md:col-span-2">
+                                <button data-filename="pages/CodeGenerator" data-linenumber="648" data-visual-selector-id="pages/CodeGenerator648" type="submit" class="illuminati-button w-full">
+                                    <i data-filename="pages/CodeGenerator" data-linenumber="649" data-visual-selector-id="pages/CodeGenerator649" class="fas fa-save mr-2"></i>Save Payment
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <div data-filename="pages/CodeGenerator" data-linenumber="660" data-visual-selector-id="pages/CodeGenerator660" id="admin-login-modal" class="modal">
+        <div data-filename="pages/CodeGenerator" data-linenumber="661" data-visual-selector-id="pages/CodeGenerator661" class="modal-content">
+            <h2 data-filename="pages/CodeGenerator" data-linenumber="662" data-visual-selector-id="pages/CodeGenerator662" class="text-xl font-bold mb-4 text-black">Admin Authentication</h2>
+            <div data-filename="pages/CodeGenerator" data-linenumber="663" data-visual-selector-id="pages/CodeGenerator663" class="form-group">
+                <label data-filename="pages/CodeGenerator" data-linenumber="664" data-visual-selector-id="pages/CodeGenerator664">Enter admin password:</label>
+                <input data-filename="pages/CodeGenerator" data-linenumber="665" data-visual-selector-id="pages/CodeGenerator665" type="password" id="admin-password" placeholder="Password">
+            </div>
+            <div data-filename="pages/CodeGenerator" data-linenumber="667" data-visual-selector-id="pages/CodeGenerator667" class="flex gap-4">
+                <button data-filename="pages/CodeGenerator" data-linenumber="668" data-visual-selector-id="pages/CodeGenerator668" onclick="verifyAdmin()" class="illuminati-button">
+                    Access Admin Panel
+                </button>
+                <button data-filename="pages/CodeGenerator" data-linenumber="671" data-visual-selector-id="pages/CodeGenerator671" onclick="closeModal('admin-login-modal')" class="px-6 py-2 bg-gray-500 text-white rounded-lg">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div data-filename="pages/CodeGenerator" data-linenumber="678" data-visual-selector-id="pages/CodeGenerator678" id="member-form-modal" class="modal">
+        <div data-filename="pages/CodeGenerator" data-linenumber="679" data-visual-selector-id="pages/CodeGenerator679" class="modal-content">
+            <h2 data-filename="pages/CodeGenerator" data-linenumber="680" data-visual-selector-id="pages/CodeGenerator680" class="text-xl font-bold mb-4 text-black">Add New Member</h2>
+            <form data-filename="pages/CodeGenerator" data-linenumber="681" data-visual-selector-id="pages/CodeGenerator681" id="add-member-form">
+                <div data-filename="pages/CodeGenerator" data-linenumber="682" data-visual-selector-id="pages/CodeGenerator682" class="form-group">
+                    <label data-filename="pages/CodeGenerator" data-linenumber="683" data-visual-selector-id="pages/CodeGenerator683">Full Name *</label>
+                    <input data-filename="pages/CodeGenerator" data-linenumber="684" data-visual-selector-id="pages/CodeGenerator684" type="text" name="fullName" required>
+                </div>
+                <div data-filename="pages/CodeGenerator" data-linenumber="686" data-visual-selector-id="pages/CodeGenerator686" class="form-group">
+                    <label data-filename="pages/CodeGenerator" data-linenumber="687" data-visual-selector-id="pages/CodeGenerator687">Email</label>
+                    <input data-filename="pages/CodeGenerator" data-linenumber="688" data-visual-selector-id="pages/CodeGenerator688" type="email" name="email">
+                </div>
+                <div data-filename="pages/CodeGenerator" data-linenumber="690" data-visual-selector-id="pages/CodeGenerator690" class="form-group">
+                    <label data-filename="pages/CodeGenerator" data-linenumber="691" data-visual-selector-id="pages/CodeGenerator691">Phone Number</label>
+                    <input data-filename="pages/CodeGenerator" data-linenumber="692" data-visual-selector-id="pages/CodeGenerator692" type="tel" name="phone">
+                </div>
+                <div data-filename="pages/CodeGenerator" data-linenumber="694" data-visual-selector-id="pages/CodeGenerator694" class="form-group">
+                    <label data-filename="pages/CodeGenerator" data-linenumber="695" data-visual-selector-id="pages/CodeGenerator695">Location</label>
+                    <input data-filename="pages/CodeGenerator" data-linenumber="696" data-visual-selector-id="pages/CodeGenerator696" type="text" name="location">
+                </div>
+                <div data-filename="pages/CodeGenerator" data-linenumber="698" data-visual-selector-id="pages/CodeGenerator698" class="form-group">
+                    <label data-filename="pages/CodeGenerator" data-linenumber="699" data-visual-selector-id="pages/CodeGenerator699">Platform Found</label>
+                    <select data-filename="pages/CodeGenerator" data-linenumber="700" data-visual-selector-id="pages/CodeGenerator700" name="platform">
+                        <option data-filename="pages/CodeGenerator" data-linenumber="701" data-visual-selector-id="pages/CodeGenerator701" value="">Select platform</option>
+                        <option data-filename="pages/CodeGenerator" data-linenumber="702" data-visual-selector-id="pages/CodeGenerator702" value="facebook">Facebook</option>
+                        <option data-filename="pages/CodeGenerator" data-linenumber="703" data-visual-selector-id="pages/CodeGenerator703" value="instagram">Instagram</option>
+                        <option data-filename="pages/CodeGenerator" data-linenumber="704" data-visual-selector-id="pages/CodeGenerator704" value="whatsapp">WhatsApp</option>
+                        <option data-filename="pages/CodeGenerator" data-linenumber="705" data-visual-selector-id="pages/CodeGenerator705" value="tiktok">TikTok</option>
+                        <option data-filename="pages/CodeGenerator" data-linenumber="706" data-visual-selector-id="pages/CodeGenerator706" value="other">Other</option>
+                    </select>
+                </div>
+                <div data-filename="pages/CodeGenerator" data-linenumber="709" data-visual-selector-id="pages/CodeGenerator709" class="form-group">
+                    <label data-filename="pages/CodeGenerator" data-linenumber="710" data-visual-selector-id="pages/CodeGenerator710">Position</label>
+                    <input data-filename="pages/CodeGenerator" data-linenumber="711" data-visual-selector-id="pages/CodeGenerator711" type="text" name="position" placeholder="e.g., Elite Member">
+                </div>
+                <div data-filename="pages/CodeGenerator" data-linenumber="713" data-visual-selector-id="pages/CodeGenerator713" class="form-group">
+                    <label data-filename="pages/CodeGenerator" data-linenumber="714" data-visual-selector-id="pages/CodeGenerator714">Payment Amount (R)</label>
+                    <input data-filename="pages/CodeGenerator" data-linenumber="715" data-visual-selector-id="pages/CodeGenerator715" type="number" name="paymentAmount">
+                </div>
+                <div data-filename="pages/CodeGenerator" data-linenumber="717" data-visual-selector-id="pages/CodeGenerator717" class="flex gap-4">
+                    <button data-filename="pages/CodeGenerator" data-linenumber="718" data-visual-selector-id="pages/CodeGenerator718" type="submit" class="illuminati-button">
+                        Add Member
+                    </button>
+                    <button data-filename="pages/CodeGenerator" data-linenumber="721" data-visual-selector-id="pages/CodeGenerator721" type="button" onclick="closeModal('member-form-modal')" class="px-6 py-2 bg-gray-500 text-white rounded-lg">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script data-filename="pages/CodeGenerator" data-linenumber="729" data-visual-selector-id="pages/CodeGenerator729">
+        // Application State
+        let appState = {
+            isAdmin: localStorage.getItem('isAdmin') === 'true',
+            isDark: localStorage.getItem('theme') !== 'light',
+            currentUser: JSON.parse(localStorage.getItem('currentUser') || 'null'),
+            members: JSON.parse(localStorage.getItem('members') || '[]'),
+            settings: JSON.parse(localStorage.getItem('settings') || '{"joiningFee": 1000, "goatPayment": 3000, "whatsapp": "063 914 5113"}')
+        };
+        
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            updateTheme();
+            updateStats();
+            loadMembers();
+            checkAuthStatus();
+        });
+        
+        function initializeApp() {
+            if (appState.isAdmin) {
+                showAdminControls();
+            }
+            
+            // Set active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+        
+        // Authentication Functions
+        function checkAuthStatus() {
+            if (appState.currentUser) {
+                console.log('User logged in:', appState.currentUser.name);
+            }
+        }
+        
+        // Navigation Functions
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId + '-page').classList.add('active');
+            
+            // Close sidebar on mobile
+            if (window.innerWidth < 768) {
+                toggleSidebar();
+            }
+            
+            // Page-specific initialization
+            switch(pageId) {
+                case 'receipt':
+                    generateReceiptContent();
+                    break;
+                case 'idcard':
+                    updateIdCard();
+                    break;
+            }
+        }
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+        
+        // Theme Functions
+        function toggleTheme() {
+            appState.isDark = !appState.isDark;
+            localStorage.setItem('theme', appState.isDark ? 'dark' : 'light');
+            updateTheme();
+        }
+        
+        function updateTheme() {
+            document.body.className = appState.isDark ? 'dark theme-transition' : 'light theme-transition';
+        }
+        
+        // Admin Functions
+        function showAdminLogin() {
+            document.getElementById('admin-login-modal').classList.add('show');
+        }
+        
+        function verifyAdmin() {
+            const password = document.getElementById('admin-password').value;
+            if (password === 'VNAXXTTM') {
+                appState.isAdmin = true;
+                localStorage.setItem('isAdmin', 'true');
+                showAdminControls();
+                closeModal('admin-login-modal');
+                document.getElementById('admin-password').value = '';
+            } else {
+                alert('Incorrect password!');
+            }
+        }
+        
+        function showAdminControls() {
+            document.getElementById('admin-section').style.display = 'none';
+            document.getElementById('admin-controls').style.display = 'block';
+            document.getElementById('add-member-btn').style.display = 'block';
+            document.getElementById('edit-threshold-btn').style.display = 'block';
+        }
+        
+        function logoutAdmin() {
+            appState.isAdmin = false;
+            localStorage.removeItem('isAdmin');
+            document.getElementById('admin-section').style.display = 'block';
+            document.getElementById('admin-controls').style.display = 'none';
+            document.getElementById('add-member-btn').style.display = 'none';
+            document.getElementById('edit-threshold-btn').style.display = 'none';
+        }
+        
+        // Member Management Functions
+        function showAddMemberForm() {
+            document.getElementById('member-form-modal').classList.add('show');
+        }
+        
+        function addMember(memberData) {
+            const member = {
+                id: Date.now(),
+                ...memberData,
+                createdAt: new Date().toISOString(),
+                paymentStatus: 'pending',
+                amountPaid: 0
+            };
+            
+            appState.members.push(member);
+            localStorage.setItem('members', JSON.stringify(appState.members));
+            updateStats();
+            loadMembers();
+        }
+        
+        function deleteMember(memberId) {
+            if (confirm('Are you sure you want to delete this member?')) {
+                appState.members = appState.members.filter(m => m.id != memberId);
+                localStorage.setItem('members', JSON.stringify(appState.members));
+                updateStats();
+                loadMembers();
+            }
+        }
+        
+        function updateMemberStatus(memberId, status) {
+            const member = appState.members.find(m => m.id == memberId);
+            if (member) {
+                member.paymentStatus = status;
+                if (status === 'paid') {
+                    member.amountPaid = (appState.settings.joiningFee || 1000) + (appState.settings.goatPayment || 3000);
+                }
+                localStorage.setItem('members', JSON.stringify(appState.members));
+                updateStats();
+                loadMembers();
+            }
+        }
+        
+        function loadMembers() {
+            const container = document.getElementById('members-container');
+            container.innerHTML = '';
+            
+            appState.members.forEach(member => {
+                const memberCard = createMemberCard(member);
+                container.appendChild(memberCard);
+            });
+        }
+        
+        function createMemberCard(member) {
+            const card = document.createElement('div');
+            card.className = 'member-card';
+            
+            const statusClass = member.paymentStatus === 'paid' ? 'badge-success' : 
+                              member.paymentStatus === 'partial' ? 'badge-warning' : 'badge-danger';
+            
+            card.innerHTML = `
+                <div data-filename="pages/CodeGenerator" data-linenumber="900" data-visual-selector-id="pages/CodeGenerator900" class="flex justify-between items-start mb-4">
+                    <div data-filename="pages/CodeGenerator" data-linenumber="901" data-visual-selector-id="pages/CodeGenerator901" class="flex items-center gap-3">
+                        <div data-filename="pages/CodeGenerator" data-linenumber="902" data-visual-selector-id="pages/CodeGenerator902" class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center">
+                            <span data-filename="pages/CodeGenerator" data-linenumber="903" data-visual-selector-id="pages/CodeGenerator903" class="text-black font-bold">${member.fullName?.charAt(0) || 'M'}</span>
+                        </div>
+                        <div data-filename="pages/CodeGenerator" data-linenumber="905" data-visual-selector-id="pages/CodeGenerator905">
+                            <h3 data-filename="pages/CodeGenerator" data-linenumber="906" data-visual-selector-id="pages/CodeGenerator906" class="text-white font-bold">${member.fullName}</h3>
+                            <p data-filename="pages/CodeGenerator" data-linenumber="907" data-visual-selector-id="pages/CodeGenerator907" class="text-yellow-400 text-sm">${member.position || 'Member'}</p>
+                        </div>
+                    </div>
+                    <span data-filename="pages/CodeGenerator" data-linenumber="910" data-visual-selector-id="pages/CodeGenerator910" class="badge ${statusClass}">${member.paymentStatus}</span>
+                </div>
+                
+                <div data-filename="pages/CodeGenerator" data-linenumber="913" data-visual-selector-id="pages/CodeGenerator913" class="space-y-2 text-sm text-gray-300">
+                    <div data-filename="pages/CodeGenerator" data-linenumber="914" data-visual-selector-id="pages/CodeGenerator914" class="flex justify-between">
+                        <span data-filename="pages/CodeGenerator" data-linenumber="915" data-visual-selector-id="pages/CodeGenerator915">Payment:</span>
+                        <span data-filename="pages/CodeGenerator" data-linenumber="916" data-visual-selector-id="pages/CodeGenerator916">R${member.amountPaid || 0} / R${member.paymentAmount || 4000}</span>
+                    </div>
+                    ${member.email ? `<div data-filename="pages/CodeGenerator" data-linenumber="918" data-visual-selector-id="pages/CodeGenerator918"><i data-filename="pages/CodeGenerator" data-linenumber="918" data-visual-selector-id="pages/CodeGenerator918" class="fas fa-envelope mr-2"></i>${member.email}</div>` : ''}
+                    ${member.phone ? `<div data-filename="pages/CodeGenerator" data-linenumber="919" data-visual-selector-id="pages/CodeGenerator919"><i data-filename="pages/CodeGenerator" data-linenumber="919" data-visual-selector-id="pages/CodeGenerator919" class="fas fa-phone mr-2"></i>${member.phone}</div>` : ''}
+                    ${member.location ? `<div data-filename="pages/CodeGenerator" data-linenumber="920" data-visual-selector-id="pages/CodeGenerator920"><i data-filename="pages/CodeGenerator" data-linenumber="920" data-visual-selector-id="pages/CodeGenerator920" class="fas fa-map-marker-alt mr-2"></i>${member.location}</div>` : ''}
+                </div>
+                
+                ${appState.isAdmin ? `
+                <div data-filename="pages/CodeGenerator" data-linenumber="924" data-visual-selector-id="pages/CodeGenerator924" class="flex gap-2 mt-4">
+                    <button data-filename="pages/CodeGenerator" data-linenumber="925" data-visual-selector-id="pages/CodeGenerator925" onclick="updateMemberStatus(${member.id}, 'paid')" class="px-3 py-1 bg-green-600 text-white text-xs rounded">Mark Paid</button>
+                    <button data-filename="pages/CodeGenerator" data-linenumber="926" data-visual-selector-id="pages/CodeGenerator926" onclick="updateMemberStatus(${member.id}, 'pending')" class="px-3 py-1 bg-gray-600 text-white text-xs rounded">Reset</button>
+                    <button data-filename="pages/CodeGenerator" data-linenumber="927" data-visual-selector-id="pages/CodeGenerator927" onclick="deleteMember(${member.id})" class="px-3 py-1 bg-red-600 text-white text-xs rounded">Delete</button>
+                </div>
+                ` : ''}
+            `;
+            
+            return card;
+        }
+        
+        function searchMembers(query) {
+            const filteredMembers = appState.members.filter(member => 
+                member.fullName?.toLowerCase().includes(query.toLowerCase()) ||
+                member.email?.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            const container = document.getElementById('members-container');
+            container.innerHTML = '';
+            
+            filteredMembers.forEach(member => {
+                const memberCard = createMemberCard(member);
+                container.appendChild(memberCard);
+            });
+        }
+        
+        function updateStats() {
+            document.getElementById('total-members').textContent = appState.members.length;
+            document.getElementById('paid-members').textContent = appState.members.filter(m => m.paymentStatus === 'paid').length;
+            document.getElementById('pending-members').textContent = appState.members.filter(m => m.paymentStatus !== 'paid').length;
+        }
+        
+        // Receipt Functions
+        function generateReceiptContent() {
+            const container = document.getElementById('receipt-card');
+            const selectedMember = appState.members[0]; // You can add member selection logic
+            
+            container.innerHTML = `
+                <div data-filename="pages/CodeGenerator" data-linenumber="962" data-visual-selector-id="pages/CodeGenerator962" class="text-center mb-6">
+                    <h2 data-filename="pages/CodeGenerator" data-linenumber="963" data-visual-selector-id="pages/CodeGenerator963" class="text-2xl font-bold text-black mb-2">ILLUMINATI PAYMENT ACCEPTANCE</h2>
+                    <h3 data-filename="pages/CodeGenerator" data-linenumber="964" data-visual-selector-id="pages/CodeGenerator964" class="text-xl font-bold text-black">RECEIPT</h3>
+                </div>
+                
+                <div data-filename="pages/CodeGenerator" data-linenumber="967" data-visual-selector-id="pages/CodeGenerator967" class="flex justify-center mb-6">
+                    <div data-filename="pages/CodeGenerator" data-linenumber="968" data-visual-selector-id="pages/CodeGenerator968" class="w-32 h-32 rounded-full p-1 bg-gradient-to-r from-pink-400 to-orange-400">
+                        <div data-filename="pages/CodeGenerator" data-linenumber="969" data-visual-selector-id="pages/CodeGenerator969" class="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
+                            <span data-filename="pages/CodeGenerator" data-linenumber="970" data-visual-selector-id="pages/CodeGenerator970" class="text-4xl font-bold text-gray-600">${selectedMember?.fullName?.charAt(0) || 'M'}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                ${selectedMember ? `
+                <div data-filename="pages/CodeGenerator" data-linenumber="976" data-visual-selector-id="pages/CodeGenerator976" class="text-center mb-6 flex items-center justify-center gap-2">
+                    <h4 data-filename="pages/CodeGenerator" data-linenumber="977" data-visual-selector-id="pages/CodeGenerator977" class="text-2xl font-bold text-black">${selectedMember.fullName}</h4>
+                    <i data-filename="pages/CodeGenerator" data-linenumber="978" data-visual-selector-id="pages/CodeGenerator978" class="fas fa-check-circle text-blue-500"></i>
+                </div>
+                ` : ''}
+                
+                <div data-filename="pages/CodeGenerator" data-linenumber="982" data-visual-selector-id="pages/CodeGenerator982" class="space-y-6">
+                    <div data-filename="pages/CodeGenerator" data-linenumber="983" data-visual-selector-id="pages/CodeGenerator983" class="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
+                        <div data-filename="pages/CodeGenerator" data-linenumber="984" data-visual-selector-id="pages/CodeGenerator984" class="flex items-center gap-4">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="985" data-visual-selector-id="pages/CodeGenerator985" class="w-16 h-16 bg-gray-400 rounded-lg flex items-center justify-center">
+                                <span data-filename="pages/CodeGenerator" data-linenumber="986" data-visual-selector-id="pages/CodeGenerator986" class="text-white font-bold text-xs">RECEIPT</span>
+                            </div>
+                            <div data-filename="pages/CodeGenerator" data-linenumber="988" data-visual-selector-id="pages/CodeGenerator988">
+                                <h5 data-filename="pages/CodeGenerator" data-linenumber="989" data-visual-selector-id="pages/CodeGenerator989" class="text-xl font-bold text-yellow-600">JOINING FEE</h5>
+                                <p data-filename="pages/CodeGenerator" data-linenumber="990" data-visual-selector-id="pages/CodeGenerator990" class="text-3xl font-bold text-black">R${appState.settings.joiningFee}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div data-filename="pages/CodeGenerator" data-linenumber="995" data-visual-selector-id="pages/CodeGenerator995" class="flex items-center justify-between p-4 bg-red-50 rounded-lg">
+                        <div data-filename="pages/CodeGenerator" data-linenumber="996" data-visual-selector-id="pages/CodeGenerator996" class="flex items-center gap-4">
+                            <div data-filename="pages/CodeGenerator" data-linenumber="997" data-visual-selector-id="pages/CodeGenerator997" class="w-16 h-16 bg-orange-600 rounded-lg flex items-center justify-center">
+                                <span data-filename="pages/CodeGenerator" data-linenumber="998" data-visual-selector-id="pages/CodeGenerator998" class="text-white font-bold text-lg">🐐</span>
+                            </div>
+                            <div data-filename="pages/CodeGenerator" data-linenumber="1000" data-visual-selector-id="pages/CodeGenerator1000">
+                                <h5 data-filename="pages/CodeGenerator" data-linenumber="1001" data-visual-selector-id="pages/CodeGenerator1001" class="text-xl font-bold text-yellow-600">INITIATION GOAT PAYMENT</h5>
+                                <p data-filename="pages/CodeGenerator" data-linenumber="1002" data-visual-selector-id="pages/CodeGenerator1002" class="text-3xl font-bold text-black">R${appState.settings.goatPayment}</p>
+                            </div>
+                        </div>
+                        <div data-filename="pages/CodeGenerator" data-linenumber="1005" data-visual-selector-id="pages/CodeGenerator1005" class="flex items-center gap-2">
+                            <i data-filename="pages/CodeGenerator" data-linenumber="1006" data-visual-selector-id="pages/CodeGenerator1006" class="fas fa-times-circle text-red-500"></i>
+                            <span data-filename="pages/CodeGenerator" data-linenumber="1007" data-visual-selector-id="pages/CodeGenerator1007" class="text-red-500 font-bold">(NOT PAID)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div data-filename="pages/CodeGenerator" data-linenumber="1012" data-visual-selector-id="pages/CodeGenerator1012" class="text-center mt-8">
+                    <div data-filename="pages/CodeGenerator" data-linenumber="1013" data-visual-selector-id="pages/CodeGenerator1013" class="w-16 h-16 bg-white rounded-lg p-2 mx-auto mb-2 illuminati-shadow">
+                        <img data-filename="pages/CodeGenerator" data-linenumber="1014" data-visual-selector-id="pages/CodeGenerator1014" src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/72d629e9a_IlluminatiEyewithSouthAfricanFlag.png" alt="Logo" class="w-full h-full object-contain">
+                    </div>
+                    <p data-filename="pages/CodeGenerator" data-linenumber="1016" data-visual-selector-id="pages/CodeGenerator1016" class="text-yellow-600 font-bold">ILLUMINATI</p>
+                    <p data-filename="pages/CodeGenerator" data-linenumber="1017" data-visual-selector-id="pages/CodeGenerator1017" class="text-black font-bold text-sm">ELITE GLOBAL NETWORK</p>
+                </div>
+            `;
+        }
+        
+        // ID Card Functions
+        function updateIdCard() {
+            const firstMember = appState.members[0];
+            if (firstMember) {
+                document.getElementById('id-name').textContent = firstMember.fullName;
+                document.getElementById('id-position').textContent = firstMember.position || 'Elite Member';
+            }
+        }
+        
+        // Download Functions
+        function downloadThresholdImage() {
+            html2canvas(document.getElementById('threshold-card')).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'joining-threshold.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+        
+        function downloadReceiptImage() {
+            html2canvas(document.getElementById('receipt-card')).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'payment-receipt.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+        
+        function downloadIdCard() {
+            html2canvas(document.getElementById('id-card')).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'id-card.png';
+                link.href = canvas.toDataURL();
+            });
+        }
+        
+        // Modal Functions
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+        
+        // Form Handlers
+        document.addEventListener('submit', function(e) {
+            if (e.target.id === 'add-member-form') {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const memberData = Object.fromEntries(formData);
+                addMember(memberData);
+                closeModal('member-form-modal');
+                e.target.reset();
+            }
+            
+            if (e.target.id === 'payment-form') {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const paymentData = Object.fromEntries(formData);
+                console.log('Payment processed:', paymentData);
+                alert('Payment processed successfully!');
+                e.target.reset();
+            }
+        });
+        
+        // Click outside modal to close
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
