@@ -1,0 +1,22 @@
+{
+  "name": "EGN Payment App",
+  "short_name": "EGN Pay",
+  "description": "Manage people payments easily with EGN Payment App",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1565C0",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/YCR8NjS2/file-00000000552871fd8679866eedaaeb38.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.postimg.cc/YCR8NjS2/file-00000000552871fd8679866eedaaeb38.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
